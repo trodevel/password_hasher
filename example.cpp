@@ -5,29 +5,65 @@
 
 #include "login_to_id_converter.h"      //
 
-int main( int argc, const char* argv[] )
+void test_login( const std::string & login, bool case_sensitive )
 {
-    if( argc != 3 )
+    std::cout << "login         = " << login << std::endl;
+
+    auto hash       = password_hasher::convert_login_to_id( login, case_sensitive );
+
+    std::cout << "login hash    = " << hash;
+
+    if( case_sensitive == false )
     {
-        std::cout << "USAGE: example <login> <password>" << std::endl;
-        return 0;
+        std::cout << " (case insensitive)";
     }
 
-    std::string login       = argv[1];
-    std::string password    = argv[2];
+    std::cout << std::endl;
+}
 
-    std::cout << "login     = " << login << std::endl;
-    std::cout << "password  = " << password << std::endl;
+void test_password( const std::string & password )
+{
+    std::cout << "password      = " << password << std::endl;
 
-    auto login_hash     = password_hasher::convert_login_to_id( login );
-    auto login_hash_i   = password_hasher::convert_login_to_id( login, false );
-    auto password_hash  = password_hasher::convert_password_to_hash( password );
+    auto hash       = password_hasher::convert_password_to_hash( password );
 
-    auto password_hash_hex = boost::algorithm::hex( password_hash );
+    auto hash_hex   = boost::algorithm::hex( hash );
 
-    std::cout << "login hash    = " << login_hash << std::endl;
-    std::cout << "login hash    = " << login_hash_i << " (case insensitive)" << std::endl;
-    std::cout << "password hash = " << password_hash_hex << std::endl;
+    std::cout << "password hash = " << hash_hex << std::endl;
+}
+
+void test_1()
+{
+    test_login( "aaa", true );
+}
+
+void test_2()
+{
+    test_login( "aaA", true );
+}
+
+void test_3()
+{
+    test_login( "aaA", false );
+}
+
+void test_4()
+{
+    test_password( "xxx" );
+}
+
+void test_5()
+{
+    test_password( "xxy" );
+}
+
+int main( int argc, const char* argv[] )
+{
+    test_1();
+    test_2();
+    test_3();
+    test_4();
+    test_5();
 
     return 0;
 }
